@@ -1,0 +1,19 @@
+{
+    "name": "pablo/api-product",
+    "autoload": {
+        "psr-4": {
+            "Pablo\\ApiProduct\\": ""
+        }
+    },
+    "authors": [
+        {
+            "name": "Pablo",
+            "email": "pablopukha@gmail.com"
+        }
+    ],
+    "require": {
+        "pecee/simple-router": "4.3.7.2",
+        "lcobucci/jwt": "^4.2",
+        "ext-json": "*"
+    }
+}
