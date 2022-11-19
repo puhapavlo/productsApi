@@ -4,7 +4,7 @@ namespace Pablo\ApiProduct\Term;
 
 class Status extends TermBase
 {
-    public $table_name = 'status';
+    const TABLE_NAME = 'status';
 
     public function update()
     {

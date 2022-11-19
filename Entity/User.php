@@ -6,7 +6,7 @@ use PDO;
 
 class User extends EntityBase {
 
-    private $table_name = "users";
+    const TABLE_NAME = "users";
 
     public $id;
 
@@ -16,7 +16,7 @@ class User extends EntityBase {
 
     public function create()
     {
-        $query = "INSERT INTO " . $this->table_name . "
+        $query = "INSERT INTO " . $this::TABLE_NAME . "
                 SET
                     username = :username,
                     password = :password";
@@ -70,7 +70,7 @@ class User extends EntityBase {
 
     public function passwordVerify($username, $password) {
         $query = "SELECT id, username, password
-            FROM " . $this->table_name . "
+            FROM " . self::TABLE_NAME . "
             WHERE username = ?
             LIMIT 0,1";
 

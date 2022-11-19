@@ -31,6 +31,9 @@ Router::group([
     Router::post('/product/create', 'ProductController@create');
     Router::post('/product/update/{id}', 'ProductController@update')
         ->where(['id' => '[\d]+']);
+    Router::post('/term/status/add', 'StatusTermController@addTerm');
+    Router::post('/term/category/add', 'CategoryTermController@addTerm');
+    Router::post('/terms/get', 'TermsController@getTerms');
 });
 
 Router::error(function(Request $request, Exception $exception) {

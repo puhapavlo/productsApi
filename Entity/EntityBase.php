@@ -6,6 +6,8 @@ use Pablo\ApiProduct\config\Database;
 
 abstract class EntityBase {
 
+    const TABLE_NAME = self::TABLE_NAME;
+
     protected $conn;
 
     public function __construct()

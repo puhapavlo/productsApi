@@ -4,7 +4,7 @@ namespace Pablo\ApiProduct\Term;
 
 class Category extends TermBase
 {
-    public $table_name = 'category';
+    const TABLE_NAME = 'category';
 
     public function update()
     {

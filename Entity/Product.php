@@ -6,6 +6,9 @@ use Pablo\ApiProduct\config\Database;
 use PDO;
 
 class Product extends EntityBase {
+
+    const TABLE_NAME = 'products';
+
     public $id;
 
     public $name;
@@ -24,9 +27,9 @@ class Product extends EntityBase {
 
     public function create()
     {
-        $query = "INSERT INTO " . $this->table_name . "
+        $query = "INSERT INTO " . $this::TABLE_NAME . "
                 SET
-                    `name` = :`name`,
+                    `name` = :name,
                     price = :price,
                     description = :description,
                     category = :category,
@@ -44,7 +47,7 @@ class Product extends EntityBase {
 
 
         $stmt->bindParam(":name", $this->name);
-        $stmt->bindParam(":price", $this->status);
+        $stmt->bindParam(":price", $this->price);
         $stmt->bindParam(":description", $this->description);
         $stmt->bindParam(":picture", $this->picture);
         $stmt->bindParam(":created", $this->created);

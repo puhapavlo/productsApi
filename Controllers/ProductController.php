@@ -19,7 +19,7 @@ class ProductController extends AbstractController
         ]);
     }
 
-    public function createProduct()
+    public function create()
     {
         $product = new Product();
         $product->name = $this->request->name;
