@@ -2,10 +2,9 @@
 
 namespace Pablo\ApiProduct\Entity;
 
-use Pablo\ApiProduct\config\Database;
+use PDO;
 
-class User {
-    private $conn;
+class User extends EntityBase {
 
     private $table_name = "users";
 
@@ -14,11 +13,6 @@ class User {
     public $username;
 
     public $password;
-
-    public function __construct()
-    {
-        $this->conn = (new Database())->getConnection();
-    }
 
     public function create()
     {
@@ -71,6 +65,39 @@ class User {
         if ($stmt->execute()) {
             return true;
         }
+        return false;
+    }
+
+    public function passwordVerify($username, $password) {
+        $query = "SELECT id, username, password
+            FROM " . $this->table_name . "
+            WHERE username = ?
+            LIMIT 0,1";
+
+        $stmt = $this->conn->prepare($query);
+
+        $this->username = htmlspecialchars(strip_tags($username));
+
+        $stmt->bindParam(1, $username);
+
+        $stmt->execute();
+
+        $num = $stmt->rowCount();
+
+        if ($num > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $this->id = $row["id"];
+            $this->username = $row["username"];
+            $this->password = $row["password"];
+
+            if (password_verify($password, $this->password)) {
+                return true;
+            }
+
+            return false;
+        }
+
         return false;
     }
 }

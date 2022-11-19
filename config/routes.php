@@ -16,13 +16,15 @@ Router::group([
     ]
 ], function () {
     Router::post('/auth/sign-in', 'AuthController@signin');
-    Router::get('/product', 'ProductController@index');
     Router::post('/user/add', 'AuthController@createUser');
+    Router::get('/product', 'ProductController@index');
 });
 
 Router::group([
+    'prefix' => 'api/v1',
     'middleware' => [
-        Authenticate::class
+        Authenticate::class,
+        ProcessRawBody::class
     ]
 ], function () {
     // authenticated routes
