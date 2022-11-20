@@ -7,7 +7,6 @@ use Pecee\Http\Request;
 
 class ProcessRawBody implements IMiddleware
 {
-
     /**
      * @inheritDoc
      */

@@ -6,8 +6,12 @@ use Pablo\ApiProduct\Term\Status;
 
 class StatusTermController extends AbstractController {
     public function addTerm() {
-        $status = new Status();
-        $status->name = $this->request->name;
-        $status->create();
+        if ($this->access->addTermAccessCheck()) {
+            $status = new Status();
+            $status->name = $this->request->name;
+            $status->create();
+        } else {
+            $this->response->httpCode(403);
+        }
     }
 }

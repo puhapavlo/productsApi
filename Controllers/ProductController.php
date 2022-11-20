@@ -3,44 +3,74 @@
 namespace Pablo\ApiProduct\Controllers;
 
 use Pablo\ApiProduct\Entity\Product;
-use Pablo\ApiProduct\Entity\User;
 
 class ProductController extends AbstractController
 {
-    public function index():string
+
+    protected $product;
+
+    public function __construct()
     {
-        return $this->response->json([
-            [
-                'name' => 'project 1'
-            ],
-            [
-                'name' => 'project 2'
-            ]
-        ]);
+        $this->product = new Product();
+        parent::__construct();
+    }
+
+    public function index()
+    {
+        if ($this->access->viewUserAccessCheck()) {
+            $this->response->json($this->product->getProducts());
+        } else {
+            $this->response->httpCode(403);
+        }
+    }
+
+    public function getProduct($id)
+    {
+        if ($this->access->viewUserAccessCheck()) {
+            $this->response->json($this->product->entityToArray($id));
+        } else {
+            $this->response->httpCode(403);
+        }
     }
 
     public function create()
     {
-        $product = new Product();
-        $product->name = $this->request->name;
-        $product->price = $this->request->price;
-        $product->description = $this->request->description;
-        $product->picture = $this->request->picture;
-        $product->category = $this->request->category;
-        $product->status = $this->request->status;
-
-        return $product->create();
+        if ($this->access->addProductAccessCheck()) {
+            $product = new Product();
+            $product->name = $this->request->name;
+            $product->price = $this->request->price;
+            $product->description = $this->request->description;
+            $product->picture = $this->request->picture;
+            $product->category = $this->request->category;
+            $product->status = $this->request->status;
+            if ($product->create()) {
+                $this->messageResponseService::setMessageForEntity
+                (
+                    $this->response,
+                    $this->messageResponseService::$CREATE_SUCCESS,
+                );
+            }
+        } else {
+            $this->response->httpCode(403);
+        }
     }
 
     public function update(int $id): string
     {
-        return $this->response->json([
-            [
-                'response' => 'OK',
-                'request' => $this->request->project,
-                'id' => $id
-            ]
-        ]);
+        if ($this->access->editUserAccessCheck()) {
+            $this->name = $this->request->name;
+            $this->price = $this->request->price;
+            $this->description = $this->request->description;
+            $this->picture = $this->request->picture;
+            $this->response->json([$this->product->update($id)]);
+        } else {
+            $this->response->httpCode(403);
+        }
+    }
+
+    public function deleteProduct($id)
+    {
+        $this->response->json($this->product->delete($id));
     }
 }
 

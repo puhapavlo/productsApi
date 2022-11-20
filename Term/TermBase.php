@@ -4,71 +4,36 @@ namespace Pablo\ApiProduct\Term;
 
 use Pablo\ApiProduct\config\Database;
 use Pablo\ApiProduct\Entity\EntityBase;
+use Pablo\ApiProduct\Entity\Fields\Field;
 use PDO;
 
-abstract class TermBase extends EntityBase {
-
+/**
+ * Base class for Terms Taxonomy.
+ */
+abstract class TermBase extends EntityBase implements TermBundleInterface
+{
+    #[Field(['name' => 'id', 'type' => 'int'])]
     public $id;
 
+    #[Field(['name' => 'name', 'type' => 'string'])]
     public $name;
 
-    public function create()
+    public function getTerms():array
     {
-        $query = "INSERT INTO " . $this::TABLE_NAME . "
-                SET
-                    `name` = :name";
-
-        $stmt = $this->conn->prepare($query);
-
-        $this->name = htmlspecialchars(strip_tags($this->name));
-        $stmt->bindParam(":name", $this->name);
-
-        if ($stmt->execute()) {
-            return true;
-        }
-
-        return false;
-
+        return $this->db->getTableData($this::TABLE_NAME);
     }
 
-    public function getTerm($id) {
-        $query = "SELECT id, `name`
-            FROM " . $this::TABLE_NAME
-        . " WHERE id = :id";
-
-        $stmt = $this->conn->prepare($query);
-
-        $this->id = htmlspecialchars(strip_tags($this->id));
-        $stmt->bindParam(":id", $this->id);
-
-        $stmt = $this->conn->query($query);
-
-        $num = $stmt->rowCount();
-
-        $row = [];
-
-        if ($num > 0) {
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        }
-
-        return $row;
+    public function label(): string
+    {
+        return $this->name;
     }
 
-    public function getTerms()
+    public function update()
     {
-        $query = "SELECT id, `name`
-            FROM " . $this::TABLE_NAME;
+        $query = "UPDATE $this::TABLE_NAME SET
+                `name` = $this->name,
+            WHERE id = $this->id";
 
-        $stmt = $this->conn->query($query);
-
-        $num = $stmt->rowCount();
-
-        $row = [];
-
-        if ($num > 0) {
-            $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        return $row;
+        return $this->db->queryExecute($query);
     }
 }

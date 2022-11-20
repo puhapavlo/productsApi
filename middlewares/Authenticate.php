@@ -9,13 +9,15 @@ use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Validation\Constraint\LooseValidAt;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use Lcobucci\JWT\Validation\Constraint\ValidAt;
 use Pablo\ApiProduct\exceptions\NotAuthorizedHttpException;
 use Pecee\Http\Middleware\IMiddleware;
 use Pecee\Http\Request;
 
-class Authenticate implements IMiddleware {
-
+/**
+ * Middleware for check Authentication.
+ */
+class Authenticate implements IMiddleware
+{
     /**
      * @inheritDoc
      * @throws NotAuthorizedHttpException

@@ -3,39 +3,61 @@
 namespace Pablo\ApiProduct\Entity;
 
 use Pablo\ApiProduct\config\Database;
+use Pablo\ApiProduct\Entity\Fields\Field;
 use PDO;
 
-class Product extends EntityBase {
-
+/**
+ * Product entity class.
+ */
+class Product extends EntityBase
+{
     const TABLE_NAME = 'products';
 
+    #[Field(['name' => 'id', 'type' => 'int'])]
     public $id;
 
+    #[Field(['name' => 'name', 'type' => 'string'])]
     public $name;
 
+    #[Field(['name' => 'price', 'type' => 'float'])]
     public $price;
 
+    #[Field(['name' => 'description', 'type' => 'string'])]
     public $description;
 
+    #[Field(['name' => 'category', 'type' => 'int'])]
     public $category;
 
+    #[Field(['name' => 'created', 'type' => 'current_time', 'format' => 'Y-m-d H:i:s'])]
     public $created;
 
+    #[Field(['name' => 'picture', 'type' => 'string'])]
     public $picture;
 
+    #[Field(['name' => 'status', 'type' => 'int'])]
     public $status;
 
-    public function create()
+    public function getProducts()
     {
-        $query = "INSERT INTO " . $this::TABLE_NAME . "
+        $db_data = $this->db->getTableData($this::TABLE_NAME);
+        $products = [];
+        foreach ($db_data as $product) {
+            $products[] = $this->load($product['id']);
+        }
+        return $products;
+    }
+
+    public function update()
+    {
+        $query = "UPDATE INTO " . $this::TABLE_NAME . "
                 SET
                     `name` = :name,
                     price = :price,
                     description = :description,
                     category = :category,
-                    created = :created,
                     picture = :picture,
-                    status = :status";
+                    status = :status 
+                    WHERE id = $this->id";
 
         $stmt = $this->conn->prepare($query);
 
@@ -43,14 +65,12 @@ class Product extends EntityBase {
         $this->price = htmlspecialchars(strip_tags($this->price));
         $this->description = htmlspecialchars(strip_tags($this->description));
         $this->picture = htmlspecialchars(strip_tags($this->picture));
-        $this->created = date('Y-m-d H:i:s');
 
 
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":price", $this->price);
         $stmt->bindParam(":description", $this->description);
         $stmt->bindParam(":picture", $this->picture);
-        $stmt->bindParam(":created", $this->created);
         $stmt->bindParam(":category", $this->category);
         $stmt->bindParam(":status", $this->status);
 
@@ -61,8 +81,9 @@ class Product extends EntityBase {
         return false;
     }
 
-    public function update()
+    public function label(): string
     {
-        // TODO: Implement update() method.
+        return $this->name;
     }
+
 }

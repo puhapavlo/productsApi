@@ -5,46 +5,51 @@ namespace Pablo\ApiProduct\Controllers;
 use Pablo\ApiProduct\exceptions\BundleNotExistException;
 use Pablo\ApiProduct\Term\Category;
 use Pablo\ApiProduct\Term\Status;
+use Pablo\ApiProduct\Term\Term;
 use PDO;
 
-class TermsController extends AbstractController {
+class TermsController extends AbstractController
+{
 
     protected $termBundle;
+
+    protected $term;
+
+
+    public function __construct()
+    {
+        $this->term = new Term();
+        parent::__construct();
+    }
 
     /**
      * @throws BundleNotExistException
      */
-    public function getTerms()
+    public function getTerms($type)
     {
-        switch ($this->request->type) {
-            case 'status':
-                $this->termBundle = new Status();
-                break;
-            case 'category':
-                $this->termBundle = new Category();
-                break;
-            default:
-                throw new BundleNotExistException($this->request->type);
+        if ($this->access->viewTermAccessCheck()) {
+            $this->termBundle = $this->term->getTermBundle($type);
+            $this->response->json($this->termBundle->getTerms());
+        } else {
+            $this->response->httpCode(403);
         }
-
-
-
-        $this->response->json($this->termBundle->getTerms());
-
     }
 
-    public function getTerm() {
-        switch ($this->request->type) {
-            case 'status':
-                $this->termBundle = new Status();
-                break;
-            case 'category':
-                $this->termBundle = new Category();
-                break;
-            default:
-                throw new BundleNotExistException($this->request->type);
+    public function getTerm($type, $id) {
+        if ($this->access->viewTermAccessCheck()) {
+            $this->termBundle = $this->term->getTermBundle($type);
+            $this->response->json($this->termBundle->entityToArray($id));
+        } else {
+            $this->response->httpCode(403);
         }
+    }
 
-        $this->response->json($this->termBundle->getTerm());
+    public function deleteTerm($type, $id) {
+        if ($this->access->deleteTermAccessCheck()) {
+            $this->termBundle = $this->term->getTermBundle($type);
+            $this->response->json($this->termBundle->delete($id));
+        } else {
+            $this->response->httpCode(403);
+        }
     }
 }
