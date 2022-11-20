@@ -2,6 +2,7 @@
 
 namespace Pablo\ApiProduct\Controllers;
 
+use Pablo\ApiProduct\Entity\Enum\EntityTypeEnum;
 use Pablo\ApiProduct\exceptions\BundleNotExistException;
 use Pablo\ApiProduct\Term\Category;
 use Pablo\ApiProduct\Term\Status;
@@ -19,6 +20,7 @@ class TermsController extends AbstractController
     public function __construct()
     {
         $this->term = new Term();
+        $this->entity = EntityTypeEnum::USER->class();
         parent::__construct();
     }
 

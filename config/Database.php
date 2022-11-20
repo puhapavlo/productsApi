@@ -16,16 +16,10 @@ class Database
 
     public function getConnection()
     {
-
         $this->conn = null;
         $dsn = "mysql:host=" . $this->host . ";dbname=" . $this->db_name;
-        $opt = [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES   => false,
-        ];
         try {
-            $this->conn = new PDO($dsn, $this->username, $this->password, $opt);
+            $this->conn = new PDO($dsn, $this->username, $this->password);
         } catch (PDOException $exception) {
             echo "Connection error: " . $exception->getMessage();
         }
@@ -35,6 +29,7 @@ class Database
 
     public function queryExecute($query)
     {
+        $this->getConnection();
         $stmt = $this->conn->query($query);
 
         if ($stmt === false) {
@@ -43,15 +38,11 @@ class Database
 
         $num = $stmt->rowCount();
 
-        $row = [];
-
         if ($num > 0) {
-            $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
-            $row = true;
+            return false;
         }
-
-        return $row;
     }
 
     public function getTableData($table_name)
@@ -61,25 +52,42 @@ class Database
         return $this->queryExecute($query);
     }
 
-    public function getRowInTable($table_name, $id) {
+    public function getRowInTable($table_name, $id)
+    {
         $query = "SELECT * FROM $table_name WHERE id = $id";
 
         return $this->queryExecute($query);
     }
 
-    public function deleteRowInTable($table_name, $id) {
+    public function deleteRowInTable($table_name, $id)
+    {
         $query = "DELETE FROM $table_name WHERE id = $id";
 
         return $this->queryExecute($query);
     }
 
-    public function insertRowToTable($table_name, $row) {
+    public function insertRowToTable($table_name, $row)
+    {
         $row_keys = array_keys($row);
         $row = Helper::addQuotesToArrayValue($row);
         $columns = implode(',', $row_keys);
         $values = implode(',', $row);
 
         $query = "INSERT INTO $table_name ($columns) VALUES ($values)";
+
+        return $this->queryExecute($query);
+    }
+
+
+    public function updateRowToTable($table_name, $row, $id)
+    {
+        $row = Helper::addQuotesToArrayValue($row);
+        $update_string = '';
+        foreach ($row as $key => $value) {
+            $update_string .= "$key = $value, ";
+        }
+
+        $query = "UPDATE $table_name SET $update_string WHERE id = $id";
 
         return $this->queryExecute($query);
     }

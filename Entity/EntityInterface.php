@@ -10,16 +10,12 @@ use Pablo\ApiProduct\Entity\Enum\EntityTypeAccess;
 interface EntityInterface
 {
     /**
-     * Method for create entity.
+     * Method for create or update entity.
+     * @param bool $update
+     *  Bool update.
      * @return mixed
      */
-    public function create();
-
-    /**
-     * Method for update entity.
-     * @return mixed
-     */
-    public function update();
+    public function save(bool $update = false);
 
     /**
      * Method for delete entity.

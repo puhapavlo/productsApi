@@ -1,7 +1,10 @@
 <?php
 
 use Pablo\ApiProduct\exceptions\NotAuthorizedHttpException;
+use Pablo\ApiProduct\MessageServices\Enum\HttpCodes;
+use Pablo\ApiProduct\MessageServices\MessageResponseService;
 use Pablo\ApiProduct\middlewares\Authenticate;
+use Pablo\ApiProduct\middlewares\ProcessArrayBody;
 use Pecee\Http\Request;
 use Pecee\SimpleRouter\SimpleRouter as Router;
 use Pablo\ApiProduct\middlewares\ProcessRawBody;
@@ -15,7 +18,7 @@ Router::group([
         ProcessRawBody::class
     ]
 ], function () {
-    Router::post('/auth/sign-in', 'AuthController@signin');
+    Router::post('/auth/sign-in', 'AuthController@login');
 });
 
 // Router group for authenticated routes.
@@ -26,41 +29,37 @@ Router::group([
         ProcessRawBody::class
     ]
 ], function () {
-    Router::get('/users', 'UserController@getUsers');
-    Router::post('/user/add', 'AuthController@register');
-    Router::delete('/user/delete/{id}', 'UserController@deleteUser')
-        ->where(['id' => '[\d]+']);
-    Router::post('/user/update/{id}', 'UserController@updateUser')
-        ->where(['id' => '[\d]+']);
+    Router::get('/{entity_type}', 'EntityController@viewAllEntity');
+    Router::get('/term/{bundle_type}', 'EntityController@viewAllEntity');
+    Router::get('/term/{bundle_type}/{id}', 'EntityController@viewEntity');
+    Router::get('/{entity_type}/{id}', 'EntityController@viewEntity');
 
-    Router::get('/products', 'ProductController@index');
-    Router::get('/product/{id}', 'ProductController@getProduct')
-        ->where(['id' => '[\d]+']);
-    Router::post('/product/add', 'ProductController@create');
-    Router::post('/product/update/{id}', 'ProductController@update')
-        ->where(['id' => '[\d]+']);
-    Router::delete('/product/delete/{id}', 'ProductController@delete')
-        ->where(['id' => '[\d]+']);
-
-    Router::post('/term/status/add', 'StatusTermController@addTerm');
-    Router::post('/term/category/add', 'CategoryTermController@addTerm');
-    Router::get('/term/{type}/{id}', 'TermsController@getTerm')
-        ->where(['id' => '[\d]+']);
-    Router::delete('/term/delete/{type}/{id}', 'TermsController@deleteTerm')
-        ->where(['id' => '[\d]+']);
-    Router::get('/terms/{type}', 'TermsController@getTerms');
+    Router::delete('/{entity_type}/delete/{id}', 'EntityController@deleteEntity');
+    Router::delete('/term/{bundle_type}/delete/{id}', 'EntityController@deleteEntity');
 });
 
-Router::error(function(Request $request, Exception $exception) {
+Router::group([
+    'prefix' => 'api/v1',
+    'middleware' => [
+        Authenticate::class,
+        ProcessArrayBody::class
+    ]
+], function () {
+    Router::post('/{entity_type}/update/{id}', 'EntityController@updateEntity');
+    Router::post('/{entity_type}/add', 'EntityController@addEntity');
+    Router::post('/term/{bundle_type}/update/{id}', 'EntityController@updateEntity');
+    Router::post('/term/{bundle_type}/add', 'EntityController@addEntity');
+});
+
+Router::error(function(Request $request, Exception $exception)
+{
     $response = Router::response();
     switch (get_class($exception)) {
-        case NotAuthorizedHttpException::class: {
-            $response->httpCode(401);
+        case NotAuthorizedHttpException::class:
+            MessageResponseService::sendHttpCode($response,HttpCodes::UNAUTHORIZED);
             break;
-        }
-        case Exception::class: {
-            $response->httpCode(500);
+        case Exception::class:
+            MessageResponseService::sendInternalServerError($response);
             break;
-        }
     }
 });

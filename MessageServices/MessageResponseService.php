@@ -11,13 +11,23 @@ use Pecee\Http\Response;
  */
 class MessageResponseService implements MessageServiceInterface
 {
-    public static function sendMessage(Response $recipient, string $message)
+    public static function sendMessage(Response $recipient, $message)
     {
         $recipient->json(['message' => $message]);
     }
 
-    public static function sendHttpCode(Response $response, HttpCodes $code)
+    public static function sendHttpCode(Response $recipient, HttpCodes $code)
     {
-        $response->httpCode($code->value);
+        $recipient->httpCode($code->value);
+    }
+
+    public static function sendForbidden(Response $recipient)
+    {
+        self::sendHttpCode($recipient, HttpCodes::FORBIDEN);
+    }
+
+    public static function sendInternalServerError(Response $recipient)
+    {
+        self::sendHttpCode($recipient, HttpCodes::INTERNAL_SERVER_ERROR);
     }
 }

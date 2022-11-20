@@ -17,13 +17,10 @@ abstract class UserRoleBase implements UserRoleInterface
 
     protected string $name;
 
-    protected $conn;
-
     protected $db;
 
     public function __construct()
     {
         $this->db = new Database();
-        $this->conn = $this->db->getConnection();
     }
 }

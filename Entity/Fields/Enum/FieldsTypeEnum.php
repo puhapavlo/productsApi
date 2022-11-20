@@ -17,10 +17,13 @@ enum FieldsTypeEnum
     case time;
     case year;
     case current_time;
+    case id;
+    case int;
 
     public function fieldType(): string
     {
         return match ($this) {
+            FieldsTypeEnum::int, FieldsTypeEnum::id => 'INT',
             FieldsTypeEnum::string, FieldsTypeEnum::password => 'VARCHAR',
             FieldsTypeEnum::char => 'CHAR',
             FieldsTypeEnum::blob => 'BLOB',

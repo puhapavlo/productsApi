@@ -18,9 +18,9 @@ class EntityMessageResponseService extends MessageResponseService
      */
     public static function sendMessage(
         Response $recipient,
-        string $message = '',
-        string $placeholder = '',
-        EntityEvents $entity_event = null
+        $placeholder = '',
+        EntityEvents $entity_event = null,
+        $message = ''
     ) {
         if ($entity_event) {
             try {
@@ -33,5 +33,27 @@ class EntityMessageResponseService extends MessageResponseService
             }
         }
         parent::sendMessage($recipient, $message);
+    }
+
+    public static function sendEventMessage(
+        Response $recipent,
+        string $placeholder,
+        EntityEvents $entity_event_success,
+        EntityEvents $entity_event_failed,
+        bool $operation
+    ) {
+        if ($operation) {
+            self::sendMessage(
+                $recipent,
+                $placeholder,
+                $entity_event_success
+            );
+        } else {
+            self::sendMessage(
+                $recipent,
+                $placeholder,
+                $entity_event_failed
+            );
+        }
     }
 }

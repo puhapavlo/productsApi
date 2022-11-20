@@ -11,15 +11,11 @@ use Pablo\ApiProduct\Entity\User\UserRoles\Enum\UserRoles;
  */
 class UserRoleService
 {
-
-    protected $conn;
-
     protected $db;
 
     public function __construct()
     {
         $this->db = new Database();
-        $this->conn = $this->db->getConnection();
     }
 
     /**

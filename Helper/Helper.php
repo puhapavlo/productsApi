@@ -18,7 +18,7 @@ class Helper
     public static function placeholder($string, $array)
     {
         foreach ($array as $key => $value) {
-            str_replace($key, $value, $string);
+            $string = str_replace($key, $value, $string);
         }
         return $string;
     }

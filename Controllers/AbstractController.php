@@ -2,13 +2,12 @@
 
 namespace Pablo\ApiProduct\Controllers;
 
-use Pablo\ApiProduct\Entity\User\Access\Access;
 use Pablo\ApiProduct\MessageServices\MessageResponseService;
 use Pecee\Http\Request;
 use Pecee\Http\Response;
 use Pecee\SimpleRouter\SimpleRouter as Router;
 
-abstract class  AbstractController implements EntityControllerInterface
+abstract class AbstractController
 {
 
     /**
@@ -21,10 +20,6 @@ abstract class  AbstractController implements EntityControllerInterface
      */
     protected $request;
 
-    protected $access;
-
-    protected $messageResponseService;
-
     /**
      * Constructor for AbstractController.
      */
@@ -32,8 +27,6 @@ abstract class  AbstractController implements EntityControllerInterface
     {
         $this->request = Router::router()->getRequest();
         $this->response =  new Response($this->request);
-        $this->access = new Access();
-        $this->messageResponseService = new MessageResponseService();
     }
 
     /**

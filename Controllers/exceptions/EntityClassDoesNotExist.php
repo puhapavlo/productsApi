@@ -1,6 +1,6 @@
 <?php
 
-namespace Pablo\ApiProduct\exceptions;
+namespace Pablo\ApiProduct\Controllers\exceptions;
 
 /**
  * Exception for FieldTypeNotExist.
@@ -17,6 +17,6 @@ class EntityClassDoesNotExist extends \Exception
 
     public function __toString()
     {
-        return "Field type $this->entityType does not exist";
+        return "Entity type $this->entityType does not exist";
     }
 }

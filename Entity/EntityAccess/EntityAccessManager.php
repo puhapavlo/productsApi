@@ -27,17 +27,17 @@ class EntityAccessManager
         $this->entity = $entity;
     }
 
-    public function getEntityAccessObj()
+    public function getEntityAccessClass()
     {
         switch ($this->entity) {
             case $this->entity instanceof Product:
-                return new ProductAccess();
+                return ProductAccess::class;
             case $this->entity instanceof User:
-                return new UserAccess();
+                return UserAccess::class;
             case $this->entity instanceof Status:
-                return new StatusAccess();
+                return StatusAccess::class;
             case $this->entity instanceof Category:
-                return new CategoryAccess();
+                return CategoryAccess::class;
             default:
                 throw new EntityAccessClassDoesNotExistException($this->entity);
         }

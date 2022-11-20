@@ -36,8 +36,8 @@ class FieldsManager
             $this->propertyReflector = new \ReflectionProperty($this->entity, $property->getName());
             $fields = $this->propertyReflector->getAttributes();
             foreach ($fields as $field) {
-                if (!FieldType::existFieldType($field->getArguments()[0]['name'])) {
-                    throw new FieldTypeNotExistException($field->getArguments()[0]['name']);
+                if (!FieldType::existFieldType($field->getArguments()[0]['type'])) {
+                    throw new FieldTypeNotExistException($field->getArguments()[0]['type']);
                 }
                 $fields_array[] = $field->getArguments()[0];
             }

@@ -7,11 +7,8 @@ use Pablo\ApiProduct\Entity\User\UserRoles\UserRoleService;
 
 abstract class AbstractEntityAccess implements EntityAccessInterface
 {
-    public $user;
 
     public $userId;
-
-    public $userRole;
 
     protected $userRoleService;
 
@@ -19,8 +16,7 @@ abstract class AbstractEntityAccess implements EntityAccessInterface
 
     public function __construct()
     {
-        $this->user = new User();
-        $userId = $this->user::getCurrentUserId();
+        $this->userId = User::getCurrentUserId();
         $this->userRoleService = new UserRoleService();
         $this->currentUserRole = $this->userRoleService->getUserRoleId($this->userId);
     }

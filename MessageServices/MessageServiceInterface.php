@@ -14,10 +14,10 @@ interface MessageServiceInterface
      *
      * @param Response $recipient
      *  Recipient of the message
-     * @param string $message
+     * @param $message
      *  Message for send.
      *
      * @return mixed
      */
-    public static function sendMessage(Response $recipient, string $message);
+    public static function sendMessage(Response $recipient, $message);
 }

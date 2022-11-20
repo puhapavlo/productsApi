@@ -2,6 +2,7 @@
 
 namespace Pablo\ApiProduct\Controllers;
 
+use Pablo\ApiProduct\Entity\Enum\EntityTypeEnum;
 use Pablo\ApiProduct\Entity\User\User;
 use Pablo\ApiProduct\Entity\User\Access\Access;
 
@@ -10,7 +11,6 @@ use Pablo\ApiProduct\Entity\User\Access\Access;
  */
 class UserController extends AbstractController
 {
-
     /**
      * @var User
      */
@@ -21,6 +21,7 @@ class UserController extends AbstractController
     public function __construct()
     {
         $this->user = new User();
+        $this->entity = EntityTypeEnum::USER->class();
         parent::__construct();
     }
 
@@ -42,7 +43,8 @@ class UserController extends AbstractController
         }
     }
 
-    public function updateUser($id) {
+    public function updateUser($id)
+    {
         if ($this->access->editUserAccessCheck()) {
             $this->user->username = $this->request->username;
             if (isset($this->request->password)) {
@@ -54,11 +56,11 @@ class UserController extends AbstractController
         }
     }
 
-    public function createUser() {
-            $this->user->username = $this->request->username;
-            $this->user->password = $this->request->password;
-            $this->user->role = $this->request->role;
-            $this->response->json([$this->user->create()]);
+    public function createUser()
+    {
+        $this->user->username = $this->request->username;
+        $this->user->password = $this->request->password;
+        $this->user->role = $this->request->role;
+        $this->response->json([$this->user->create()]);
     }
-
 }

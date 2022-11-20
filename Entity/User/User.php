@@ -2,9 +2,7 @@
 
 namespace Pablo\ApiProduct\Entity\User;
 
-use Attribute;
 use Pablo\ApiProduct\Entity\EntityBase;
-use Pablo\ApiProduct\Entity\Enum\EntityTypeAccess;
 use Pablo\ApiProduct\Entity\Fields\Field;
 use PDO;
 use Pecee\SimpleRouter\SimpleRouter as Router;
@@ -28,52 +26,17 @@ class User extends EntityBase
     #[Field(['name' => 'role', 'type' => 'int'])]
     public $role;
 
-    public function update()
-    {
-        $password_set = "";
-        $this->username = htmlspecialchars(strip_tags($this->username));
-
-        $query = "UPDATE $this::TABLE_NAME SET
-                `username` = $this->username,
-                {$password_set}
-            WHERE id = $this->id";
-
-        if (!empty($this->password)) {
-            $this->password = htmlspecialchars(strip_tags($this->password));
-            $password_hash = password_hash($this->password, PASSWORD_BCRYPT);
-            $password_set = $password_hash;
-        }
-
-        if ($this->db->queryExecute($query)) {
-            return true;
-        }
-
-        return false;
-    }
-
     public function passwordVerify($username, $password)
     {
-        $query = "SELECT id, username, password
-            FROM " . self::TABLE_NAME . "
-            WHERE username = ?
-            LIMIT 0,1";
+        $table_name = self::TABLE_NAME;
+        $query = "SELECT * FROM $table_name WHERE username = '$username'";
 
-        $stmt = $this->conn->prepare($query);
+        $result = $this->db->queryExecute($query)[0];
 
-        $this->username = htmlspecialchars(strip_tags($username));
-
-        $stmt->bindParam(1, $username);
-
-        $stmt->execute();
-
-        $num = $stmt->rowCount();
-
-        if ($num > 0) {
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            $this->id = $row["id"];
-            $this->username = $row["username"];
-            $this->password = $row["password"];
+        if ($result) {
+            $this->id = $result["id"];
+            $this->username = $result["username"];
+            $this->password = $result["password"];
 
             if (password_verify($password, $this->password)) {
                 return true;
