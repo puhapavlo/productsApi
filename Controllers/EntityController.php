@@ -13,6 +13,9 @@ class EntityController extends AbstractEntityController
         if ($this->entity->access->addAccess()) {
             $this->prepareUpdate();
             $operation = $this->entity->save();
+            if (!is_bool($operation)) {
+                $operation = true;
+            }
             EntityMessageResponseService::sendEventMessage(
                 $this->response,
                 $this->entity->label(),
@@ -31,6 +34,9 @@ class EntityController extends AbstractEntityController
         if ($this->entity->access->updateAccess()) {
             $this->prepareUpdate($id);
             $operation = $this->entity->save(true);
+            if (!is_bool($operation)) {
+                $operation = true;
+            }
             EntityMessageResponseService::sendEventMessage(
                 $this->response,
                 $this->entity->label(),
@@ -47,7 +53,10 @@ class EntityController extends AbstractEntityController
     {
         parent::deleteEntity($entity_type, $id);
         if ($this->entity->access->deleteAccess()) {
-            $operation = $this->entity->delete($id);
+            $operation = $this->entity->delete();
+            if (!is_bool($operation)) {
+                $operation = true;
+            }
             EntityMessageResponseService::sendEventMessage(
                 $this->response,
                 $this->entity->label(),
@@ -65,6 +74,9 @@ class EntityController extends AbstractEntityController
         parent::viewEntity($entity_type, $id);
         if ($this->entity->access->viewAccess()) {
             $operation = $this->entity->entityToArray($id);
+            if (!is_bool($operation)) {
+                $operation = true;
+            }
             if ($operation) {
                 EntityMessageResponseService::sendMessage(
                     $this->response,
@@ -85,6 +97,9 @@ class EntityController extends AbstractEntityController
         parent::viewAllEntity($entity_type);
         if ($this->entity->access->viewAccess()) {
             $operation = $this->entity->getAllEntiesArray();
+            if (!is_bool($operation)) {
+                $operation = true;
+            }
             if ($operation) {
                 EntityMessageResponseService::sendMessage(
                     $this->response,
