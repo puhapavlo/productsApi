@@ -41,14 +41,6 @@ class AbstractEntityController extends AbstractController implements EntityContr
         $this->fieldsManager = new FieldsManager($this->entity);
     }
 
-    public function setBundleTerm($type)
-    {
-        if ($this->entity instanceof Term) {
-            $this->entity = $this->entity->getTermBundle($type);
-        }
-    }
-
-
     public function addEntity($entity_type)
     {
         $this->setEntity($entity_type);
