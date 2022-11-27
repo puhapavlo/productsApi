@@ -4,7 +4,6 @@ namespace Pablo\ApiProduct\Controllers;
 
 use Pablo\ApiProduct\MessageServices\EntityMessageResponseService;
 use Pablo\ApiProduct\MessageServices\Enum\EntityEvents;
-use Pablo\ApiProduct\MessageServices\MessageResponseService;
 
 class EntityController extends AbstractEntityController
 {

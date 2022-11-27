@@ -2,14 +2,11 @@
 
 namespace Pablo\ApiProduct\Entity;
 
-use Attribute;
 use Pablo\ApiProduct\config\Database;
 use Pablo\ApiProduct\Entity\EntityAccess\EntityAccessInterface;
 use Pablo\ApiProduct\Entity\EntityAccess\EntityAccessManager;
 use Pablo\ApiProduct\Entity\Fields\Enum\FieldsTypeEnum;
 use Pablo\ApiProduct\Entity\Fields\FieldsManager;
-use Pablo\ApiProduct\MessageServices\MessageResponseService;
-use Pecee\SimpleRouter\SimpleRouter as Router;
 
 /**
  * Main abstract class for entity.
@@ -37,16 +34,25 @@ abstract class EntityBase implements EntityInterface
         $this->access = new ($this->entityAccessManager->getEntityAccessClass());
     }
 
+    /**
+     * @inheritDoc
+     */
     public function entityToArray($id): array
     {
         return $this->db->getRowInTable($this::TABLE_NAME, $this->id);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function delete()
     {
         return $this->db->deleteRowInTable($this::TABLE_NAME, $this->id);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function load($id): EntityInterface
     {
         $fields = $this->fieldsManager->getFieldsArray();
@@ -57,6 +63,9 @@ abstract class EntityBase implements EntityInterface
         return $this;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function save($update = false)
     {
         $fields = $this->fieldsManager->getFieldsArray();
@@ -90,6 +99,9 @@ abstract class EntityBase implements EntityInterface
                 $this->db->insertRowToTable($this::TABLE_NAME, $row);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getAllEntiesArray(): array
     {
         return $this->db->getTableData($this::TABLE_NAME);

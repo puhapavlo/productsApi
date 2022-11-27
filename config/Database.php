@@ -8,12 +8,24 @@ use PDOException;
 
 class Database
 {
+    /**
+     * Configs for database.
+     */
     private $host = "localhost";
     private $db_name = "product_api_db";
     private $username = "root";
     private $password = "";
+
+    /**
+     * Connection to database.
+     */
     public $conn;
 
+    /**
+     * Method that return connection to database.
+     *
+     * @return PDO|null
+     */
     public function getConnection()
     {
         $this->conn = null;

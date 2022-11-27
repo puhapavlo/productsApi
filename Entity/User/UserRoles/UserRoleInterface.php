@@ -10,5 +10,13 @@ namespace Pablo\ApiProduct\Entity\User\UserRoles;
  */
 interface UserRoleInterface
 {
+    /**
+     * Get Role name.
+     */
+    public function getRoleName();
 
+    /**
+     * Get Role id.
+     */
+    public function getRoleId();
 }

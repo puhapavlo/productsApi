@@ -4,7 +4,6 @@ namespace Pablo\ApiProduct\Entity\User;
 
 use Pablo\ApiProduct\Entity\EntityBase;
 use Pablo\ApiProduct\Entity\Fields\Field;
-use PDO;
 use Pecee\SimpleRouter\SimpleRouter as Router;
 
 /**
@@ -26,6 +25,14 @@ class User extends EntityBase
     #[Field(['name' => 'role', 'type' => 'int'])]
     public $role;
 
+    /**
+     * Verify method for password and username.
+     *
+     * @param $username
+     * @param $password
+     *
+     * @return bool
+     */
     public function passwordVerify($username, $password)
     {
         $table_name = self::TABLE_NAME;
@@ -48,16 +55,17 @@ class User extends EntityBase
         return false;
     }
 
-    public function getUsers()
-    {
-        return $this->db->getTableData($this::TABLE_NAME);
-    }
-
+    /**
+     * Return current user id.
+     */
     public static function getCurrentUserId()
     {
         return Router::router()->getRequest()?->uid;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function label(): string
     {
         return $this->username;

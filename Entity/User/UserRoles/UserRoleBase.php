@@ -23,4 +23,20 @@ abstract class UserRoleBase implements UserRoleInterface
     {
         $this->db = new Database();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRoleName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRoleId()
+    {
+        return $this->id;
+    }
 }
