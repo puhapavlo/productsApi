@@ -2,10 +2,8 @@
 
 namespace Pablo\ApiProduct\Term;
 
-use Pablo\ApiProduct\config\Database;
 use Pablo\ApiProduct\Entity\EntityBase;
 use Pablo\ApiProduct\Entity\Fields\Field;
-use PDO;
 
 /**
  * Base class for Terms Taxonomy.
@@ -23,11 +21,17 @@ abstract class TermBase extends EntityBase implements TermBundleInterface
         return $this->db->getTableData($this::TABLE_NAME);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function label(): string
     {
         return $this->name;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function update()
     {
         $query = "UPDATE $this::TABLE_NAME SET

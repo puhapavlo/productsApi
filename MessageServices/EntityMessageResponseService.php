@@ -4,7 +4,6 @@ namespace Pablo\ApiProduct\MessageServices;
 
 use Pablo\ApiProduct\Helper\Helper;
 use Pablo\ApiProduct\MessageServices\Enum\EntityEvents;
-use Pablo\ApiProduct\MessageServices\Enum\HttpCodes;
 use Pablo\ApiProduct\MessageServices\exceptions\EntityEventDoesNotExist;
 use Pecee\Http\Response;
 
