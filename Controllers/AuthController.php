@@ -31,7 +31,7 @@ class AuthController extends AbstractController
             InMemory::plainText('dsjfhj34jr4eksdn3r3fjhjkehdfn4rhflusdrhf48eir')
         );
 
-        if ($this->user->passwordVerify($this->request->name, $this->request->password)) {
+        if ($this->user->passwordVerify($this->request->username, $this->request->password)) {
             $now = new \DateTimeImmutable();
             $token = $config->builder()
                 ->issuedBy('http://example.com')
